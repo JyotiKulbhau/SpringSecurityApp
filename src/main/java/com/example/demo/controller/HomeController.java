@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/home")
 public class HomeController {
 
-	@PreAuthorize("hasRole('NORMAL')")
-	@GetMapping("/normal")
+	@PreAuthorize("hasRole('USER')")
+	@GetMapping("/user")
 	public ResponseEntity<String> normalUser() {
 		return ResponseEntity.ok("Normal User");
 	}
