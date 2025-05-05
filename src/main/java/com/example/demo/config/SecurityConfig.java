@@ -67,8 +67,8 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(
-				auth -> auth.requestMatchers("/home/public","/forgotPass","/resetPass").permitAll().anyRequest().authenticated())
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/home/public", "/forgotPass", "/resetPass").permitAll()
+				.anyRequest().authenticated())
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login")
 						.successHandler((request, response, authentication) -> {
 							boolean isAdmin = authentication.getAuthorities().stream()
