@@ -2,6 +2,8 @@ package com.example.demo.config;
 
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -14,10 +16,13 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.example.demo.controller.LoginController;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity // This enables @PreAuthorize and @PostAuthorize
 public class SecurityConfig {
+	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
 	// Inject the properties from application.properties
 	/*
@@ -67,7 +72,7 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(auth -> auth.requestMatchers("/home/public", "/forgotPass", "/resetPass").permitAll()
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/home/public", "/forgotPass", "/resetPass","/getUsers").permitAll()
 				.anyRequest().authenticated())
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login")
 						.successHandler((request, response, authentication) -> {
@@ -96,7 +101,7 @@ public class SecurityConfig {
 	public UserDetailsService userDetailsService(DataSource dataSource) {
 		// JdbcUserDetailsManager uses the default Spring Security schema
 		JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
-		System.out.println("userDetailsService getJdbcTemplate:" + userDetailsManager.getJdbcTemplate());
+		logger.debug("userDetailsService getJdbcTemplate:" + userDetailsManager.getJdbcTemplate());
 
 		return userDetailsManager;
 	}

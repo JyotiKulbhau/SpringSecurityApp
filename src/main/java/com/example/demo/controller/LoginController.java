@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,26 +59,6 @@ public class LoginController {
 		}
 
 		return "redirect:/resetPass";
-	}
-
-	@GetMapping("/addUser")
-	@PreAuthorize("hasRole('ADMIN')")
-	public String showAddUserForm() {
-		return "addUser";
-	}
-
-	@PostMapping("/addUser")
-	@PreAuthorize("hasRole('ADMIN')")
-	public String addUser(@RequestParam String username, @RequestParam String password,
-			RedirectAttributes redirectAttr) {
-
-		boolean isAdded = userService.addUser(username, password);
-		if (isAdded) {
-			redirectAttr.addFlashAttribute("successMessage", "User Added Successfully!.");
-		} else {
-			redirectAttr.addFlashAttribute("errorMessage", "User Already Present Or Failed to add user :(");
-		}
-		return "redirect:/addUser";
 	}
 
 }

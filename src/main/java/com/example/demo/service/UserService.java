@@ -1,12 +1,16 @@
 package com.example.demo.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.bussinessObjects.User;
 import com.example.demo.controller.LoginController;
 
 @Service
@@ -63,6 +67,53 @@ public class UserService {
 			}
 		}
 		return false; // User is already present
+	}
+
+	public List<String> getAllUsernames() {
+		String sql = "SELECT username FROM users";
+		return jdbcTemplate.queryForList(sql, String.class); // return the single row
+	}
+
+	public List<User> getAllUserData() {
+		String sql = "select * from users";
+		List<User> userList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class));
+		return userList;
+	}
+
+	public boolean deleteUser(String username) {
+		boolean authorityTableExists = false;
+
+		try {
+			jdbcTemplate.queryForObject("SELECT 1 FROM authorities LIMIT 1", Integer.class);
+			authorityTableExists = true;
+		} catch (Exception ex) {
+			logger.warn("Table 'authority' does not exist. Skipping authority deletion.");
+		}
+
+		if (authorityTableExists) {
+			String deleteAuthorityQuery = "DELETE FROM authorities WHERE username = ?";
+			int deletedAuth = jdbcTemplate.update(deleteAuthorityQuery, username);
+
+			if (deletedAuth > 0) {
+				logger.debug("Authority for user {} deleted successfully.", username);
+			} else {
+				logger.debug("No authority found for user {}. Proceeding to delete user.", username);
+			}
+		}
+
+		String deletUserQuery = "delete from users where username=?";
+		int deleted = jdbcTemplate.update(deletUserQuery, username);
+		if (deleted > 0) {
+			logger.debug("user is deleted successfully...");
+			return true;
+		}
+		logger.debug("failed user deletion");
+		return false;
+	}
+
+	public boolean editUser(User user) {
+		
+		return true;
 	}
 
 }
