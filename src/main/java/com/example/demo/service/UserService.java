@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.bussinessObjects.User;
+import com.example.demo.config.UserRowMapper;
 import com.example.demo.controller.LoginController;
 
 @Service
@@ -112,8 +113,25 @@ public class UserService {
 	}
 
 	public boolean editUser(User user) {
-		
-		return true;
+		logger.debug("inside editUser()");
+
+		String sql = "UPDATE users SET password = ?, enabled = ? WHERE username = ?";
+		int updated = jdbcTemplate.update(sql, user.getPassword(), user.isEnabled(), user.getUsername());
+
+		if (updated > 0) {
+			logger.debug("User updated successfully");
+			return true;
+		}
+
+		logger.debug("User update failed");
+		return false;
+	}
+
+	public User getUserByUsername(String username) {
+		String sql = "SELECT username, password, enabled FROM users WHERE username = ?";
+		User user = jdbcTemplate.queryForObject(sql, new UserRowMapper(), username);
+		logger.info("Fetched user: " + user.getUsername() + ", " + user.getPassword() + ", " + user.isEnabled());
+		return user;
 	}
 
 }

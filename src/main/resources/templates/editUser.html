@@ -1,93 +1,125 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>User List</title>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<title>Edit User</title>
 <style>
 body {
 	font-family: Arial, sans-serif;
-	background-color: #f2f2f2;
-	margin: 0;
-	padding: 0;
+	background-color: #f4f6f8;
+	margin: 20px;
 }
 
-h1 {
+.form-container {
+	background: white;
+	padding: 30px;
+	border-radius: 8px;
+	max-width: 400px;
+	margin: auto;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
 	text-align: center;
-	margin-top: 50px;
 	color: #333;
 }
 
-table {
-	margin: 40px auto;
-	width: 80%;
-	border-collapse: collapse;
-	background-color: #ffffff;
-	border-radius: 10px;
-	border: 1px solid #999;
+label {
+	display: inline-block;
+	margin: 15px 0 5px;
+	color: #444;
 }
 
-th, td {
-	padding: 15px;
-	text-align: left;
-	border: 1px solid #999;
+input[type="text"], input[type="password"] {
+	width: 100%;
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
 }
 
-th {
-	background-color: #0056b3; /* #4CAF90; */
+.checkbox-group {
+	margin: 15px 0;
+}
+
+.checkbox-group label {
+	display: inline;
+	margin-left: 5px;
+}
+
+button {
+	background-color: #007bff;
 	color: white;
+	padding: 10px;
+	width: 100%;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
 }
 
-tr:hover {
-	background-color: #f5f5f5;
+button:hover {
+	background-color: #0056b3;
 }
 
-td a {
-	margin-right: 10px;
+.password-wrapper {
+	position: relative;
+}
+
+.password-wrapper input[type="password"], .password-wrapper input[type="text"]
+	{
+	padding-right: 0px; /* make space for the icon */
+}
+
+.toggle-password {
+	position: absolute;
+	top: 50%;
+	right: 10px;
+	transform: translateY(-50%);
+	cursor: pointer;
 	color: #007bff;
-	text-decoration: none;
-}
-
-td a:hover {
-	text-decoration: underline;
-}
-
-.message {
-	text-align: center;
-	margin-bottom: 5px;
-	font-weight: bold;
-}
-
-.message.error {
-	color: red;
-}
-
-.message.success {
-	color: green;
 }
 </style>
 </head>
 <body>
 
-	<form th:action="@{/editUser}" th:object="${user}" method="post">
-		<div th:if="${errorMessage}" class="message error"
-			th:text="${errorMessage}"></div>
-		<div th:if="${successMessage}" class="message success"
-			th:text="${successMessage}"></div>
-		<div>
-			<label for="username">Username:</label> <input type="text"
-				th:field="*{username}" readonly />
-		</div>
-		<div>
-			<label for="password">Password:</label> <input type="password"
-				th:field="*{password}" />
-		</div>
-		<div>
-			<label for="enabled">Enabled:</label> <input type="checkbox"
-				th:field="*{enabled}" />
-		</div>
-		<div>
-			<button type="submit">Edit</button>
-		</div>
-	</form>
+	<div class="form-container">
+		<h2>Edit User</h2>
+
+		<form th:action="@{/editUser}" th:object="${user}" method="post">
+			<label>Username</label> <input type="text" th:field="*{username}"
+				readonly /> <label>Password</label>
+			<div class="password-wrapper">
+				<input type="password" th:field="*{password}" id="passwordField" />
+				<i class="fa-solid fa-eye toggle-password" id="toggleIcon"
+					onclick="togglePassword()"></i>
+			</div>
+			<div class="checkbox-group">
+				<input type="checkbox" th:field="*{enabled}" id="enabledCheckbox" />
+				<label for="enabledCheckbox">Enabled</label>
+			</div>
+
+			<button type="submit">Save</button>
+		</form>
+	</div>
+
+	<script>
+		function togglePassword() {
+			const passwordInput = document.getElementById("passwordField");
+			const toggleIcon = document.getElementById("toggleIcon");
+
+			if (passwordInput.type === "password") {
+				passwordInput.type = "text";
+				toggleIcon.classList.remove("fa-eye");
+				toggleIcon.classList.add("fa-eye-slash");
+			} else {
+				passwordInput.type = "password";
+				toggleIcon.classList.remove("fa-eye-slash");
+				toggleIcon.classList.add("fa-eye");
+			}
+		}
+	</script>
+
 
 </body>
 </html>

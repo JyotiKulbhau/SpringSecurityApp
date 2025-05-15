@@ -49,6 +49,7 @@ td a {
 td a:hover {
 	text-decoration: underline;
 }
+
 .message {
 	text-align: center;
 	margin-bottom: 5px;
@@ -67,8 +68,10 @@ td a:hover {
 <body>
 	<h1>All Users</h1>
 	<table>
-	<div th:if="${errorMessage}" class="message error" th:text="${errorMessage}"></div>
-	<div th:if="${successMessage}" class="message success" th:text="${successMessage}"></div>
+		<div th:if="${errorMessage}" class="message error"
+			th:text="${errorMessage}"></div>
+		<div th:if="${successMessage}" class="message success"
+			th:text="${successMessage}"></div>
 		<tr>
 			<th>UserName</th>
 			<th>Password</th>
@@ -79,9 +82,9 @@ td a:hover {
 			<td th:text="${user.username}">username</td>
 			<td th:text="${user.password}">password</td>
 			<td th:text="${user.enabled}">enabled</td>
-			<td>
-			<form th:action="@{/editUser(username=${user.username})}" method="post">
-			<button type="submit"> Edit</button></form>
+			<td><a th:href="@{/editUser(username=${user.username})}">Edit</a>
+				<!-- <form th:action="@{/editUser(username=${user.username})}" method="post">
+			<button type="submit"> Edit</button></form> -->
 				<form th:action="@{/deleteUser}" method="post"
 					th:onsubmit="return confirmDelete()" style="display: inline;">
 					<input type="hidden" name="username" th:value="${user.username}" />

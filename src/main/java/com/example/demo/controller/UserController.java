@@ -61,25 +61,33 @@ public class UserController {
 	@PostMapping("/deleteUser")
 	@PreAuthorize("hasRole('ADMIN')")
 	public String deleteUser(@RequestParam String username, RedirectAttributes redirectAttributes) {
-	    boolean deleted = userService.deleteUser(username);
-	    if (deleted) {
-	        redirectAttributes.addFlashAttribute("successMessage", "User deleted successfully.");
-	    } else {
-	        redirectAttributes.addFlashAttribute("errorMessage", "User could not be deleted.");
-	    }
-	    return "redirect:/getAllUsers";
+		boolean deleted = userService.deleteUser(username);
+		if (deleted) {
+			redirectAttributes.addFlashAttribute("successMessage", "User deleted successfully.");
+		} else {
+			redirectAttributes.addFlashAttribute("errorMessage", "User could not be deleted.");
+		}
+		return "redirect:/getAllUsers";
+	}
+
+	@GetMapping("/editUser")
+	@PreAuthorize("hasRole('ADMIN')")
+	public String showEditForm(@RequestParam String username, Model model) {
+		User user = userService.getUserByUsername(username);
+		model.addAttribute("user", user);
+		return "editUser";
 	}
 
 	@PostMapping("/editUser")
 	@PreAuthorize("hasRole('ADMIN')")
-	public String editUser(@ModelAttribute("user") User user,RedirectAttributes redirectAttributes){
-		   boolean edited = userService.editUser(user);
-		    if (edited) {
-		        redirectAttributes.addFlashAttribute("successMessage", "User updated successfully.");
-		    } else {
-		        redirectAttributes.addFlashAttribute("errorMessage", "User update failed.");
-		    }
-		    return "redirect:/getAllUsers";
-		
+	public String editUser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
+		boolean edited = userService.editUser(user);
+		if (edited) {
+			redirectAttributes.addFlashAttribute("successMessage", "User updated successfully.");
+		} else {
+			redirectAttributes.addFlashAttribute("errorMessage", "User update failed.");
+		}
+		return "redirect:/getAllUsers";
+
 	}
 }
