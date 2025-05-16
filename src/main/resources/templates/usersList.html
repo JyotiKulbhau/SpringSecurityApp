@@ -74,14 +74,12 @@ td a:hover {
 			th:text="${successMessage}"></div>
 		<tr>
 			<th>UserName</th>
-			<th>Password</th>
-			<th>Enabled</th>
+			<th>Status</th>
 			<th>Action</th>
 		</tr>
 		<tr th:each="user : ${users}">
 			<td th:text="${user.username}">username</td>
-			<td th:text="${user.password}">password</td>
-			<td th:text="${user.enabled}">enabled</td>
+			<td th:text="${user.enabled}? 'ACTIVE' :'INACTIVE'">status</td>
 			<td><a th:href="@{/editUser(username=${user.username})}">Edit</a>
 				<!-- <form th:action="@{/editUser(username=${user.username})}" method="post">
 			<button type="submit"> Edit</button></form> -->

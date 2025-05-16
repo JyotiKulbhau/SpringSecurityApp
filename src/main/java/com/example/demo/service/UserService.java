@@ -51,7 +51,7 @@ public class UserService {
 		}
 	}
 
-	public boolean addUser(String username, String pass) {
+	public boolean addUser(String username, String pass, String role) {
 		boolean isPresent = userIsPresent(username);
 		if (!isPresent) {
 			String encodedPassword = passwordEncoder.encode(pass);
@@ -60,7 +60,7 @@ public class UserService {
 			int added = jdbcTemplate.update(sql, username, encodedPassword, 1);
 
 			String insertAuth = "INSERT Into authorities (username,authority) VALUES(?,?)";
-			int inserted = jdbcTemplate.update(insertAuth, username, "ROLE_USER");
+			int inserted = jdbcTemplate.update(insertAuth, username, role);
 
 			if (added > 0 && inserted > 0) {
 				logger.debug("New user inserted...");
@@ -114,23 +114,28 @@ public class UserService {
 
 	public boolean editUser(User user) {
 		logger.debug("inside editUser()");
+		String encodedPassword = passwordEncoder.encode(user.getPassword());
 
 		String sql = "UPDATE users SET password = ?, enabled = ? WHERE username = ?";
-		int updated = jdbcTemplate.update(sql, user.getPassword(), user.isEnabled(), user.getUsername());
+		int updated = jdbcTemplate.update(sql, encodedPassword, user.isEnabled(), user.getUsername());
 
-		if (updated > 0) {
+		String updateAuthority = "update authorities set authority=? where username=?";
+		int updatedAuth = jdbcTemplate.update(updateAuthority, user.getRole(), user.getUsername());
+
+		if (updated > 0 && updatedAuth > 0) {
 			logger.debug("User updated successfully");
 			return true;
 		}
 
-		logger.debug("User update failed");
+		logger.debug("User updation failed");
 		return false;
 	}
 
 	public User getUserByUsername(String username) {
-		String sql = "SELECT username, password, enabled FROM users WHERE username = ?";
+		String sql = "SELECT u.username, u.password, u.enabled, a.authority FROM users u JOIN authorities a ON u.username = a.username where u.username=?";
 		User user = jdbcTemplate.queryForObject(sql, new UserRowMapper(), username);
-		logger.info("Fetched user: " + user.getUsername() + ", " + user.getPassword() + ", " + user.isEnabled());
+		logger.info("Fetched user: " + user.getUsername() + ", " + user.getPassword() + ", " + user.isEnabled() + ", "
+				+ user.getRole());
 		return user;
 	}
 

@@ -26,17 +26,20 @@ h2 {
 	color: #333;
 }
 
-label {
+label, select {
 	display: inline-block;
 	margin: 15px 0 5px;
 	color: #444;
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"], input[type="password"], select {
 	width: 100%;
-	padding: 8px;
+	padding: 10px;
+	margin-bottom: 15px;
 	border: 1px solid #ccc;
 	border-radius: 5px;
+	box-sizing: border-box;
+	color: #000f;
 }
 
 .checkbox-group {
@@ -75,7 +78,7 @@ button:hover {
 	position: absolute;
 	top: 50%;
 	right: 10px;
-	transform: translateY(-50%);
+	transform: translateY(-60%);
 	cursor: pointer;
 	color: #007bff;
 }
@@ -88,16 +91,22 @@ button:hover {
 
 		<form th:action="@{/editUser}" th:object="${user}" method="post">
 			<label>Username</label> <input type="text" th:field="*{username}"
-				readonly /> <label>Password</label>
+				readonly required /> <label>Password</label>
 			<div class="password-wrapper">
-				<input type="password" th:field="*{password}" id="passwordField" />
-				<i class="fa-solid fa-eye toggle-password" id="toggleIcon"
-					onclick="togglePassword()"></i>
+				<input type="password" th:field="*{password}" id="passwordField"
+					required /> <i class="fa-solid fa-eye toggle-password"
+					id="toggleIcon" onclick="togglePassword()"></i>
 			</div>
+			<select th:field="*{role}" required>
+				<option value="" selected disabled>Select Role</option>
+				<option value="ROLE_USER">ROLE_USER</option>
+				<option value="ROLE_PUBLIC">ROLE_PUBLIC</option>
+			</select>
 			<div class="checkbox-group">
 				<input type="checkbox" th:field="*{enabled}" id="enabledCheckbox" />
-				<label for="enabledCheckbox">Enabled</label>
+				<label for="enabledCheckbox"><b>ACTIVE / INACTIVE</b></label>
 			</div>
+
 
 			<button type="submit">Save</button>
 		</form>
@@ -119,7 +128,6 @@ button:hover {
 			}
 		}
 	</script>
-
 
 </body>
 </html>
