@@ -9,12 +9,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.bussinessObjects.User;
+import com.example.demo.service.EmailService;
 import com.example.demo.service.UserService;
 
 @Controller
 public class LoginController {
 
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private EmailService emailService;
 
 	@GetMapping("/login")
 	public String login() {
@@ -33,9 +41,6 @@ public class LoginController {
 		return "resetPassword";
 	}
 
-	@Autowired
-	private UserService userService;
-
 	@PostMapping("/resetPass")
 	public String resetPassword(@RequestParam String username, @RequestParam String password,
 			@RequestParam String cpassword, RedirectAttributes redirectAttributes) {
@@ -50,12 +55,27 @@ public class LoginController {
 			return "redirect:/resetPass";
 		}
 
+		User user = userService.getUserByUsername(username);
+		if (user == null) {
+			redirectAttributes.addFlashAttribute("errorMessage", "User not found.");
+			return "redirect:/resetPass";
+		}
+
 		boolean success = userService.updatePassword(username, password);
 
 		if (success) {
-			redirectAttributes.addFlashAttribute("successMessage", "Password reset successfully!");
+			String subject = "Password Reset Confirmation";
+			String message = "Hello " + username + ",\nYour password has been reset successfully.\n- Support Team";
+
+			String to = user.getEmail();
+			logger.debug("Sending email to " + user.getEmail());
+			// Send confirmation email
+			emailService.sendPasswordResetEmail(to, subject, message);
+
+			redirectAttributes.addFlashAttribute("successMessage",
+					"Password reset successfully! Please check your email.");
 		} else {
-			redirectAttributes.addFlashAttribute("errorMessage", "User not found or update failed.");
+			redirectAttributes.addFlashAttribute("errorMessage", "Password update failed or user is not present.");
 		}
 
 		return "redirect:/resetPass";

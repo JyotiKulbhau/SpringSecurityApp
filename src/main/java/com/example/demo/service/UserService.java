@@ -44,6 +44,7 @@ public class UserService {
 						username);
 				return rows > 0;
 			}
+			logger.debug("user is not present");
 			return false; // User not present
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -132,7 +133,7 @@ public class UserService {
 	}
 
 	public User getUserByUsername(String username) {
-		String sql = "SELECT u.username, u.password, u.enabled, a.authority FROM users u JOIN authorities a ON u.username = a.username where u.username=?";
+		String sql = "SELECT u.username, u.password, u.enabled, a.authority, u.email FROM users u JOIN authorities a ON u.username = a.username where u.username=?";
 		User user = jdbcTemplate.queryForObject(sql, new UserRowMapper(), username);
 		logger.info("Fetched user: " + user.getUsername() + ", " + user.getPassword() + ", " + user.isEnabled() + ", "
 				+ user.getRole());
