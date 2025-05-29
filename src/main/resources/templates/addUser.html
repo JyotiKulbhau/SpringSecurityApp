@@ -89,8 +89,9 @@ input[type="submit"]:hover {
 			<input type="hidden" th:name="${_csrf.parameterName}"
 				th:value="${_csrf.token}" /> <label>Username:</label> <input
 				type="text" name="username" required /> <br /> <label>Password:</label>
-			<input type="password" name="password" required /> <br /> <select
-				required name="role">
+			<input type="password" name="password" required /> <br /> <label>Email:</label>
+			<input type="text" name="email" required /> <br /> <select required
+				name="role">
 				<option value="" disabled selected>Select Role</option>
 				<option value="ROLE_USER">ROLE_USER</option>
 				<option value="ROLE_PUBLIC">ROLE_PUBLIC</option>

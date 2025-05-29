@@ -52,13 +52,13 @@ public class UserService {
 		}
 	}
 
-	public boolean addUser(String username, String pass, String role) {
+	public boolean addUser(String username, String pass, String email, String role) {
 		boolean isPresent = userIsPresent(username);
 		if (!isPresent) {
 			String encodedPassword = passwordEncoder.encode(pass);
 
-			String sql = "INSERT into users (username,password,enabled) values(?,?,?)";
-			int added = jdbcTemplate.update(sql, username, encodedPassword, 1);
+			String sql = "INSERT into users (username,password,enabled,email) values(?,?,?,?)";
+			int added = jdbcTemplate.update(sql, username, encodedPassword, 1, email);
 
 			String insertAuth = "INSERT Into authorities (username,authority) VALUES(?,?)";
 			int inserted = jdbcTemplate.update(insertAuth, username, role);

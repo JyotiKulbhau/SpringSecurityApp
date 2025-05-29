@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -72,8 +73,11 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(auth -> auth.requestMatchers("/home/public", "/forgotPass", "/resetPass","/getUsers").permitAll()
-				.anyRequest().authenticated())
+		http
+				.csrf().disable() //Disable CSRF for non-browser API requests
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers("/home/public", "/forgotPass", "/resetPass", "/getUsers", "/sendOtp")
+						.permitAll().anyRequest().authenticated())
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login")
 						.successHandler((request, response, authentication) -> {
 							boolean isAdmin = authentication.getAuthorities().stream()

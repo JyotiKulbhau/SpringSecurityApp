@@ -31,10 +31,10 @@ public class UserController {
 
 	@PostMapping("/addUser")
 	@PreAuthorize("hasRole('ADMIN')")
-	public String addUser(@RequestParam String username, @RequestParam String password, @RequestParam String role,
-			RedirectAttributes redirectAttr) {
+	public String addUser(@RequestParam String username, @RequestParam String password, @RequestParam String email,
+			@RequestParam String role, RedirectAttributes redirectAttr) {
 
-		boolean isAdded = userService.addUser(username, password, role);
+		boolean isAdded = userService.addUser(username, password, email, role);
 		if (isAdded) {
 			redirectAttr.addFlashAttribute("successMessage", "User Added Successfully!.");
 		} else {
@@ -72,7 +72,7 @@ public class UserController {
 
 	@GetMapping("/editUser")
 	@PreAuthorize("hasRole('ADMIN')")
-	public String showEditForm(@RequestParam String username,Model model) {
+	public String showEditForm(@RequestParam String username, Model model) {
 		User user = userService.getUserByUsername(username);
 		model.addAttribute("user", user);
 		return "editUser";

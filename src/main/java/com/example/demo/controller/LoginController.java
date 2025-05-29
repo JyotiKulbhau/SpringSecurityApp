@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.bussinessObjects.User;
 import com.example.demo.service.EmailService;
+import com.example.demo.service.OtpService;
 import com.example.demo.service.UserService;
 
 @Controller
@@ -23,6 +24,9 @@ public class LoginController {
 
 	@Autowired
 	private EmailService emailService;
+	
+	@Autowired
+	private OtpService otpService;
 
 	@GetMapping("/login")
 	public String login() {
@@ -79,6 +83,11 @@ public class LoginController {
 		}
 
 		return "redirect:/resetPass";
+	}
+	
+	@PostMapping("/sendOtp")
+	public String generateAndSendOtpOnMail(@RequestParam String email) {
+		return otpService.generateAndSendOtpOnMail(email);
 	}
 
 }
