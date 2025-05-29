@@ -88,8 +88,8 @@ input[type="submit"]:hover {
 			username or password</div>
 		<div th:if="${param.logout}" class="message logout">You have
 			been logged out</div>
-		<!-- <input type="hidden" th:name="${_csrf.parameterName}"
-			th:value="${_csrf.token}" />  --><label>Username:</label> <input
+		<input type="hidden" th:name="${_csrf.parameterName}"
+			th:value="${_csrf.token}" /> <label>Username:</label> <input
 			type="text" name="username" /><br /> <label>Password:</label> <input
 			type="password" name="password" /><br /> <input type="submit"
 			value="Login"></input>
