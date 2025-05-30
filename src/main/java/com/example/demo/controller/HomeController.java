@@ -17,7 +17,7 @@ import com.example.demo.service.UserService;
 @Controller
 @RequestMapping("/home")
 public class HomeController {
-	
+
 	@Autowired
 	private UserService userService;
 
@@ -29,21 +29,20 @@ public class HomeController {
 				.collect(Collectors.joining(", "));
 		return ResponseEntity.ok("Hi " + username + ", your role is :" + role);
 	}
-	 
+
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/admin")
-    public String adminUser(Authentication authentication, Model model) {
-        String uName = authentication.getName();
-        String role = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(", "));
+	public String adminUser(Authentication authentication, Model model) {
+		String uName = authentication.getName();
+		String role = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+				.collect(Collectors.joining(", "));
 
-        model.addAttribute("username", uName);
-        model.addAttribute("role", role);
-        model.addAttribute("users", userService.getAllUserData());
+		model.addAttribute("username", uName);
+		model.addAttribute("role", role);
+		model.addAttribute("users", userService.getAllUserData());
 
-        return "admin_dashBoard";
-    }
+		return "admin_dashBoard";
+	}
 
 	@GetMapping("/public")
 	public ResponseEntity<String> publicUser() {

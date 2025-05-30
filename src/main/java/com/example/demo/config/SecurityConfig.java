@@ -74,9 +74,11 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
-				//.csrf().disable() //Disable CSRF for non-browser API requests
+				// .csrf().disable() //Disable CSRF for non-browser API requests
+				.csrf(csrf -> csrf.ignoringRequestMatchers("/otp/sendOtp", "/otp/verify"))
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/home/public", "/forgotPass", "/resetPass", "/getUsers", "/sendOtp")
+						.requestMatchers("/home/public", "/forgotPass", "/resetPass", "/getUsers", "/otp/sendOtp",
+								"/otp/verify", "/otp/requestOtp", "/otp/resend", "/otp/otpVerification")
 						.permitAll().anyRequest().authenticated())
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login")
 						.successHandler((request, response, authentication) -> {

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Request OTP</title>
+<style>
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f2f2f2;
+}
+
+h2 {
+	text-align: center;
+	margin-top: 50px;
+	color: #333;
+}
+
+form {
+	margin: 40px auto;
+	padding: 30px;
+	width: 400px;
+	background-color: #ffffff;
+	border-radius: 10px;
+	box-shadow: 0 5 15px rgba(0, 0, 0, 0.2);
+}
+
+label {
+	display: block;
+	margin: 10px 0 5px;
+	color: #333;
+}
+
+input[type="email"] {
+	width: 100%;
+	padding: 10px;
+	margin-bottom: 15px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-sizing: border-box;
+}
+
+input[type="submit"] {
+	display: block;
+	margin: 10px auto;
+	width: 80%;
+	padding: 10px;
+	background-color: #007bff;
+	border: none;
+	color: white;
+	font-weight: bold;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+input[type="submit"]:hover {
+	background-color: #0056b3;
+}
+</style>
+</head>
+<body>
+	<h2>Enter Email to Receive OTP</h2>
+	<form th:action="@{/otp/requestOtp}" method="post">
+		<label>Email:</label> <input type="email" name="email" required /> <input
+			type="submit" value="Send OTP" />
+	</form>
+</body>
+</html>

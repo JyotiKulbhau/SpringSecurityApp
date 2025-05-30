@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Login</title>
+<title>OTP verification</title>
 <style>
 body {
 	font-family: Arial, sans-serif;
@@ -29,7 +29,7 @@ label {
 	color: #333;
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"] {
 	width: 100%;
 	padding: 10px;
 	margin-bottom: 15px;
@@ -38,10 +38,15 @@ input[type="text"], input[type="password"] {
 	box-sizing: border-box;
 }
 
+.button-group {
+	display: flex;
+	justify-content: center; /* Center buttons horizontally */
+	gap: 20px; /* Space between buttons */
+	margin-top: 10px;
+}
+
 input[type="submit"] {
-	display: block;
-	margin: 10px auto;
-	width: 80%;
+	width: 150px;
 	padding: 10px;
 	background-color: #007bff;
 	border: none;
@@ -49,10 +54,6 @@ input[type="submit"] {
 	font-weight: bold;
 	border-radius: 5px;
 	cursor: pointer;
-}
-
-a {
-	width: 50%;
 }
 
 input[type="submit"]:hover {
@@ -69,34 +70,30 @@ input[type="submit"]:hover {
 	color: red;
 }
 
-.message.logout {
+.message.success {
 	color: green;
-}
-
-.forgot {
-	text-align: center;
-	margin: 5px;
-	font-weight: light;
 }
 </style>
 </head>
 <body>
-	<h2>Login Page</h2>
-	<form th:action="@{/login}" method="post" id="form">
-
-		<div th:if="${param.error}" class="message error">Invalid
-			username or password</div>
-		<div th:if="${param.logout}" class="message logout">You have
-			been logged out</div>
-		<input type="hidden" th:name="${_csrf.parameterName}"
-			th:value="${_csrf.token}" /> <label>Username:</label> <input
-			type="text" name="username" /><br /> <label>Password:</label> <input
-			type="password" name="password" /><br /> <input type="submit"
-			value="Login"></input>
-		<div class="forgot">
-			<a th:href="@{/forgotPass}">Forgot Password?</a>
+	<h2>OTP Verification</h2>
+	<form th:action="@{/otp/otpVerification}" method="post" id="form">
+		<div th:if="${errorMessage}" class="message error"
+			th:text="${errorMessage}"></div>
+		<div th:if="${successMessage}" class="message success"
+			th:text="${successMessage}"></div>
+		<label>Enter OTP Here:</label> <input type="text" name="otpInput" /><br />
+		<div class="button-group">
+			<input type="submit" name="action" value="Verify OTP"></input> <input
+				type="submit" name="action" value="Resend OTP"></input>
 		</div>
 
 	</form>
+
+	<!-- <!-- Resend OTP button 
+	<form th:action="@{/otp/resend}" method="post"
+		style="margin-top: 10px;">
+		<input type="submit" value="Resend OTP" />
+	</form> -->
 </body>
 </html>
